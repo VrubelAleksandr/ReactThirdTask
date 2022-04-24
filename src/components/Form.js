@@ -1,66 +1,65 @@
-import React, { Component } from 'react'
+import React from 'react';
+import { useState } from 'react';
 
-export default class Form extends Component {
-  constructor () {
-    super();
-    this.state = {
-      nameuser: '',
-      surname: '', 
-      tel: '', 
-    }
-  }
+export default function Form({ contacts, onaddContact, oncancel }) {
 
-  changeHandler = (e) => {
-    this.setState({
+  const [item, setItem] = useState({
+    name: '',
+    username: '',
+    phone: ''
+  });
+
+  function changeHandler(e) {
+    setItem({
+      ...item,
       [e.target.name]: e.target.value,
     })
   }
 
-  submitHandler = (e) => {
+  function submitHandler(e) {
     e.preventDefault();
-    this.props.addсontact(this.state.nameuser, this.state.surname, this.state.tel)
-    this.setState({
-      nameuser: '',
-      surname: '', 
-      tel: ''
+    console.log(item);
+    onaddContact(item.name, item.username, item.phone);
+    setItem({
+      name: '',
+      username: '',
+      phone: ''
     })
-    
+    oncancel();
   }
 
-  cancel = (e) => {
+  function cancel(e) {
     e.preventDefault();
-    this.props.cancel()
+    oncancel();
   }
-  
-  render() {
-    return (
-      <form className='form-users' 
-      onSubmit={this.submitHandler}
-      >
-            <input 
-              type='text' 
-              placeholder='Name' 
-              name='nameuser' 
-              onChange={this.changeHandler} 
-              value={this.state.nameuser} 
-              key={1} />
-            <input 
-              type='text' 
-              placeholder='Surname' 
-              name='surname' 
-              onChange={this.changeHandler} 
-              value={this.state.surname}
-              key={2} />
-            <input 
-              type='tel' 
-              placeholder='Phone' 
-              name='tel' 
-              onChange={this.changeHandler} 
-              value={this.state.tel} 
-              key={3} />
-            <button key={4} type="submit" className='btn'>Save contact</button>
-            <button key={5} onClick={this.cancel} className='btn'>Cancel</button>
-      </form>
-    )
-  }
+
+  return (
+    <form className='form-users'
+      onSubmit={submitHandler}
+    >
+      <input
+        type='text'
+        placeholder='Name'
+        name='name'
+        onChange={changeHandler}
+        value={item.name}
+        key={1} />
+      <input
+        type='text'
+        placeholder='Username'
+        name='username'
+        onChange={changeHandler}
+        value={item.username}
+        key={2} />
+      <input
+        type='tel'
+        placeholder='Phone'
+        name='phone'
+        onChange={changeHandler}
+        value={item.phone}
+        key={3} />
+      <button key={4} type="submit" className='btn'>Save contact</button>
+      <button key={5} className='btn' onClick={cancel} >Cancel</button>
+    </form>
+  )
 }
